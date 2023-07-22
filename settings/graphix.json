@@ -1,0 +1,9 @@
+{
+  "cluster": {
+    "address": "localhost",
+    "port": 19002
+  },
+  "query": {
+    "timeout": 3600
+  }
+}

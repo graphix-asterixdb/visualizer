@@ -1,0 +1,17 @@
+.mainSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem;
+    height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.mainContent {
+    margin-left: 16rem;
+}
+
+.queryButton {
+    width: 6rem;
+}

@@ -1,3 +1,5 @@
 /venv/
 /.idea/
-/output/
+/install/
+/__pycache__/
+*.DS_Store

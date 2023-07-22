@@ -1,3 +1,11 @@
-graphviz
-requests
-tabulate
+dash==2.10.1
+visdcc~=0.0.50
+diskcache~=5.6.1
+pandas==2.0.2
+requests~=2.31.0
+beautifulsoup4~=4.12.2
+
+# For making our UI a bit prettier :-)
+dash-loading-spinners
+dash-bootstrap-components
+dash-ace
