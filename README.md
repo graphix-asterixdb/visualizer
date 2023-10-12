@@ -22,3 +22,7 @@ A web-based query interface for Graphix.
     ```bash
     python3 app.py
     ```
+   If you experience issues on macOS system, please try the command below.
+    ```bash
+    OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES python app.py
+    ```
