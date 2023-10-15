@@ -50,7 +50,7 @@ def _execute_query(n_clicks, query_input):
                       f"{settings_json['cluster']['port']}/query/service"
 
     # Issue our query.
-    api_parameters = {'statement': query_input}
+    api_parameters = {'statement': 'SET `graphix.compiler.add-context` "true"; ' + query_input}
     response = requests.post(cluster_uri, api_parameters).json()
     if response['status'] != 'success':
         raise GraphixStatementError(response)
