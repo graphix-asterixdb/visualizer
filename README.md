@@ -22,7 +22,15 @@ A web-based query interface for Graphix.
     ```bash
     python3 app.py
     ```
-   If you experience issues on macOS system, please try the command below.
+   
+## Troubleshooting
+
+1. Issuing the `python3 app.py` command on macOS raises an error containing `...in progress in another thread when fork() was called...`.
+    This error might be caused by added security to restrict multithreading (see [here](https://stackoverflow.com/a/52230415)).
+    Executing the command below should hopefully allow the visualizer to run.
     ```bash
-    OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES python app.py
+    OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES python3 app.py
     ```
+
+Running into another problem not listed in this doc?
+File an issue on Github [here](https://github.com/graphix-asterixdb/visualizer/issues/new)!
