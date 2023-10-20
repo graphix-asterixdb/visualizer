@@ -60,7 +60,7 @@ def _execute_query(n_clicks, query_input):
     dash.Output('tableViewer', 'data'),
     dash.Output('tableViewer', 'columns'),
     dash.Input('queryResults', 'data'),
-    dash.State('outputTabs', 'active_tab')
+    dash.Input('outputTabs', 'active_tab')
 )
 def _update_table(query_results, active_tab):
     if active_tab != 'tableOutputTab':
