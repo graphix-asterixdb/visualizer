@@ -18,12 +18,13 @@ def scrape_functions() -> typing.Dict:
     soup = bs4.BeautifulSoup(page.content, 'html.parser')
 
     functions_dict = dict()
+    function_class_dict = dict()
     for func_element in soup.findAll('h3'):
         # noinspection PyBroadException
         try:
             function_names = func_element.text
             function_next = func_element.findNextSibling()
-            function_class = func_element.parent.parent.next_element.next_element.findNext('a')['name']
+            function_class = func_element.parent.parent.next_element.next_element.findNext('a')['name'].split('_.')[0]
             function_text = re.sub(r'\n\n+', '\n\n', function_next.text).strip()
             function_description = re.sub(
                 r'\s+',
@@ -38,15 +39,19 @@ def scrape_functions() -> typing.Dict:
                     'functionText': function_text,
                     'functionDescription': function_description
                 }
+                function_class_dict[function_class] = []
                 print(f'{function_name} [{function_class}]: {function_description}')
 
         except Exception:
             pass
 
+    for function_obj in functions_dict.values():
+        function_class_dict[function_obj['functionClass']].append(function_obj)
+
     # Save our results.
     with functions_file.open(mode='w') as fp:
-        json.dump(functions_dict, fp)
-    return functions_dict
+        json.dump(function_class_dict, fp)
+    return function_class_dict
 
 def scrape_keywords() -> typing.List[str]:
     # First, see if we can serve our keywords without scraping...
