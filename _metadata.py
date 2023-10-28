@@ -1,9 +1,11 @@
 import json
+import dash
 import pathlib
 import requests
 from dash import html
 import dash_bootstrap_components as bootstrap
 from __errors__ import *
+from __global__ import *
 
 class _MetadataPage:
     def __call__(self, *args, **kwargs):
@@ -28,8 +30,65 @@ def get_metadata(dataverse, dataset):
         raise GraphixStatementError(response)
     return response['results']
 
+def get_name(item):
+    attribute_name_list = ["DatasetName", "DatatypeName", "GraphName"]
+    for attribute_name in attribute_name_list:
+        if item.get(attribute_name):
+            return item.get(attribute_name)
+    return "UNDEFINED"
+
+
+@app.callback(
+    dash.Output('choice', 'children'),
+    dash.Output({"dataverse": dash.ALL, "type": dash.ALL, "idx": dash.ALL}, 'n_clicks'),
+    dash.Input({"dataverse": dash.ALL, "type": dash.ALL, "idx": dash.ALL}, 'n_clicks'),
+    dash.State({"dataverse": dash.ALL, "type": dash.ALL, "idx": dash.ALL}, 'value'),
+    prevent_initial_call=True,
+)
+def _update(n_clicks, data):
+    for i in range(len(n_clicks)):
+        if n_clicks[i]:
+            return str(data[i]), [None for item in n_clicks]
+    return None, [None for item in n_clicks]
+
 def build_page():
-    dataverse_list = [html.P("Dataverses:")]
+    metadata_dict = {}
+    metadata_type_list = ["Dataset", "Datatype", "Graph"]
+
     for dataverse in get_metadata("Metadata", "Dataverse"):
-        dataverse_list.append(html.P(dataverse['DataverseName']))
-    return bootstrap.Container(children=dataverse_list, fluid=True)
+        metadata_dict[dataverse['DataverseName']] = {"Dataset": [], "Datatype": [], "Graph": []}
+
+    for metadata_type in metadata_type_list:
+        for metadata in get_metadata("Metadata", metadata_type):
+            dataverse_name = metadata["DataverseName"]
+            metadata_dict[dataverse_name][metadata_type].append(metadata)
+
+    return bootstrap.Row(
+        [
+            bootstrap.Col(
+                bootstrap.Accordion(
+                    [
+                        bootstrap.AccordionItem(
+                            bootstrap.Accordion(
+                                [
+                                    bootstrap.AccordionItem(
+                                        [
+                                            html.Div(bootstrap.Button(
+                                                get_name(item),
+                                                value=item,
+                                                id={"dataverse": dataverse, "type": group_name, "idx": idx}
+                                            )) for idx, item in enumerate(value)
+                                        ],
+                                        title=group_name,
+                                    ) for group_name, value in groups.items()
+                                ]
+                            ),
+                            title=dataverse,
+                        ) for dataverse, groups in metadata_dict.items()
+                    ],
+                ),
+                width=4
+            ), 
+            bootstrap.Col(html.P(id='choice'))
+        ]
+    )
