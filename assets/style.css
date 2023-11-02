@@ -15,3 +15,12 @@
 .queryButton {
     width: 6rem;
 }
+
+.metadata-list-item:hover {
+    color: blue;
+}
+
+.code {
+    color: black;
+    border: 2px outset antiquewhite;
+}
