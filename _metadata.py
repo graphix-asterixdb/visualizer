@@ -3,6 +3,7 @@ import dash
 import pathlib
 import requests
 from dash import html, dcc
+import dash_loading_spinners as spinners
 import dash_bootstrap_components as bootstrap
 from __errors__ import *
 from __global__ import *
@@ -46,6 +47,7 @@ def get_name(item):
     dash.Input({"dataverse": dash.ALL, "type": "Dataset", "idx": dash.ALL}, 'n_clicks'),
     dash.State({"dataverse": dash.ALL, "type": "Dataset", "idx": dash.ALL}, 'data-detail'),
     prevent_initial_call=True,
+    running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
 )
 def _update(n_clicks, data):
     for i in range(len(n_clicks)):
@@ -113,6 +115,7 @@ def build_page():
             ), 
             bootstrap.Col([
                 html.Div(id='choice'),
+                html.Div(id='detail-spinner', className='position-absolute top-50 start-50 translate-middle')
             ])
         ]
     )
