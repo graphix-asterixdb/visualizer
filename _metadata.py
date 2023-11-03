@@ -49,7 +49,7 @@ def get_name(item):
     prevent_initial_call=True,
     running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
 )
-def _update(n_clicks, data):
+def _update_dataset(n_clicks, data):
     for i in range(len(n_clicks)):
         if n_clicks[i]:
             detail = data[i]
@@ -111,6 +111,44 @@ def _update_datatype(n_clicks, data):
             return jumbotron, [None for item in n_clicks]
     return None, [None for item in n_clicks]
 
+@app.callback(
+    dash.Output('choice', 'children', allow_duplicate=True),
+    dash.Output({"dataverse": dash.ALL, "type": "Graph", "idx": dash.ALL}, 'n_clicks'),
+    dash.Input({"dataverse": dash.ALL, "type": "Graph", "idx": dash.ALL}, 'n_clicks'),
+    dash.State({"dataverse": dash.ALL, "type": "Graph", "idx": dash.ALL}, 'data-detail'),
+    prevent_initial_call=True,
+    running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
+)
+def _update_graph(n_clicks, data):
+    for i in range(len(n_clicks)):
+        if n_clicks[i]:
+            detail = data[i]
+            jumbotron = bootstrap.Container(
+                [
+                    html.H1("Graph: " + detail["GraphName"], className="display-5"),
+                    html.Br(),
+                    html.Hr(className="my-2"),
+                    html.Br(),
+                    html.P("Dataverse: " + detail["DataverseName"]),
+                    html.P("Graph: " + detail["GraphName"]),
+                    html.P("Vertices:"),
+                    bootstrap.Container(
+                        html.Pre(html.Code(json.dumps(detail["Vertices"], indent=2))),
+                        className="code"
+                    ),
+                    html.Br(),
+                    html.P("Edges:"),
+                    bootstrap.Container(
+                        html.Pre(html.Code(json.dumps(detail["Edges"], indent=2))),
+                        className="code"
+                    ),
+                ],
+                fluid=True,
+                className="py-2",
+            )
+            return jumbotron, [None for item in n_clicks]
+    return None, [None for item in n_clicks]
+
 
 def build_page():
     metadata_dict = {}
@@ -151,9 +189,12 @@ def build_page():
                 ),
                 width=4
             ), 
-            bootstrap.Col([
-                html.Div(id='choice'),
-                html.Div(id='detail-spinner', className='position-absolute top-50 start-50 translate-middle')
-            ])
+            bootstrap.Col(
+                [
+                    html.Div(id='choice'),
+                    html.Div(id='detail-spinner', className='position-absolute top-50 start-50 translate-middle')
+                ],
+                width=8
+            )
         ]
     )
