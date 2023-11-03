@@ -16,6 +16,12 @@
     width: 6rem;
 }
 
+.metadata-list-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .metadata-list-item:hover {
     color: blue;
 }
