@@ -92,6 +92,8 @@ def _execute_query(n_clicks, query_input):
         for variable, edge in entry.items():
             if variable in edge_variables:
                 edge_definition = edge_variables[variable]
+                if edge_definition["from"] not in id_dict or edge_definition["to"] not in id_dict:
+                    continue
                 edges.append({"source": id_dict[edge_definition["from"]], "target": id_dict[edge_definition["to"]], "data": edge})
 
     print({'nodes': list(nodes.values()), 'edges': edges})
