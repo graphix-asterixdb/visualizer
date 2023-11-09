@@ -24,6 +24,7 @@ _callback_manager = dash.DiskcacheManager(diskcache.Cache())
 
 @app.callback(
     dash.Output('queryResults', 'data'),
+    dash.Output('graphData', 'data'),
     dash.Input('runButton', 'n_clicks'),
     dash.State('queryInput', 'value'),
     prevent_initial_call=True,
@@ -54,7 +55,54 @@ def _execute_query(n_clicks, query_input):
     response = requests.post(cluster_uri, api_parameters).json()
     if response['status'] != 'success':
         raise GraphixStatementError(response)
-    return response['results']
+    if not response.get('results'):
+        return {}, {'nodes': [], 'edges': []}
+    
+    # Store variable names representing nodes and edges.
+    node_variables = {
+        node["graphElement"]["variable"]: node["graphElement"]["labels"][0] 
+        for node in response["graphix"]["patterns"]["vertices"]
+    }
+    edge_variables = {
+        edge["graphElement"]["variable"]: {
+            "label": edge["graphElement"]["labels"][0], 
+            "from": edge["edgeElement"]["leftVertex"]["variable"], 
+            "to": edge["edgeElement"]["rightVertex"]["variable"]
+        } 
+        for edge in response["graphix"]["patterns"]["edges"]
+    }
+
+    # Turn query result into nodes and edges.
+    idx = 0
+    nodes = {}
+    edges = []
+    for entry in response['results']:
+        # Go through each node, cache each node's id.
+        id_dict = {}
+        for variable, node in entry.items():
+            if variable in node_variables:
+                node_tuple = dict_to_tuple(node)
+                if node_tuple in nodes:
+                    id_dict[variable] = nodes[node_tuple]["id"]
+                else:
+                    idx += 1
+                    id_dict[variable] = idx
+                    nodes[node_tuple] = {"id": idx, "data": node}
+        # Go through each edge.
+        for variable, edge in entry.items():
+            if variable in edge_variables:
+                edge_definition = edge_variables[variable]
+                edges.append({"source": id_dict[edge_definition["from"]], "target": id_dict[edge_definition["to"]], "data": edge})
+
+    print({'nodes': list(nodes.values()), 'edges': edges})
+    return response['results'], {'nodes': list(nodes.values()), 'edges': edges}
+
+def dict_to_tuple(d):
+    res = []
+    for key, value in d.items():
+        res.append(key)
+        res.append(value)
+    return tuple(res)
 
 @app.callback(
     dash.Output('tableViewer', 'data'),

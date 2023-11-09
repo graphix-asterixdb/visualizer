@@ -11,6 +11,7 @@ app.layout = html.Div(
     children=[
         dash.dcc.Location(id="url"),
         dash.dcc.Store(id='queryResults', data={}),
+        dash.dcc.Store(id='graphData', data={'nodes': [], 'edges': []}),
         bootstrap.Col(
             className='mainSidebar bg-light',
             children=[
