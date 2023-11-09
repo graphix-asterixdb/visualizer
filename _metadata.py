@@ -49,7 +49,7 @@ def get_name(item):
     prevent_initial_call=True,
     running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
 )
-def _update_dataset(n_clicks, data):
+def _dataset_detail(n_clicks, data):
     for i in range(len(n_clicks)):
         if n_clicks[i]:
             detail = data[i]
@@ -82,7 +82,7 @@ def _update_dataset(n_clicks, data):
     prevent_initial_call=True,
     running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
 )
-def _update_datatype(n_clicks, data):
+def _datatype_detail(n_clicks, data):
     for i in range(len(n_clicks)):
         if n_clicks[i]:
             detail = data[i]
@@ -119,7 +119,7 @@ def _update_datatype(n_clicks, data):
     prevent_initial_call=True,
     running=[(dash.Output('detail-spinner', 'children'), spinners.Grid(color='#325d88'), None)]
 )
-def _update_graph(n_clicks, data):
+def _graph_detail(n_clicks, data):
     for i in range(len(n_clicks)):
         if n_clicks[i]:
             detail = data[i]

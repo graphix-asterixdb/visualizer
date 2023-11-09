@@ -10,7 +10,7 @@ import _settings as settings_page
 app.layout = html.Div(
     children=[
         dash.dcc.Location(id="url"),
-        dash.dcc.Store(id='queryResults'),
+        dash.dcc.Store(id='queryResults', data={}),
         bootstrap.Col(
             className='mainSidebar bg-light',
             children=[
