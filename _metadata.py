@@ -99,10 +99,12 @@ def _datatype_detail(n_clicks, data):
                     html.P("Dataverse: " + detail["DataverseName"]),
                     html.P("Datatype: " + detail["DatatypeName"]),
                     html.P("Fields:"),
-                    # html.Ul([html.Li(field) for field in fields]),
                     bootstrap.Container(
-                        html.Pre(html.Code(json.dumps(fields, indent=2))),
-                        className="code"
+                        [html.P([
+                            f"{field['FieldName']} ({field['FieldType']})",
+                            html.Span(f"{'Nullable' if field['IsNullable'] else 'Not Nullable'} | "
+                                f"{'Not Required' if field['IsMissable'] else 'Required'}", style={"float": "right"})
+                        ]) for field in fields]
                     ),
                 ],
                 fluid=True,
