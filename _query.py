@@ -22,6 +22,7 @@ from __errors__ import *
 
 _callback_manager = dash.DiskcacheManager(diskcache.Cache())
 
+
 @app.callback(
     dash.Output('queryResults', 'data'),
     dash.Output('graphData', 'data'),
@@ -122,6 +123,16 @@ def _update_table(query_results, active_tab):
     table_columns = [{"name": i, "id": i} for i in column_names]
     return table_data, table_columns
 
+
+def _update_graph(query_result,active_tab):
+    if active_tab != 'tableOutputTab':
+        raise dash.exceptions.PreventUpdate
+    return f'''
+        <script>
+                myExternalFunction("Data for Tab 2");
+            </script>
+    '''
+
 def build_page():
     def _build_input_pane():
         return bootstrap.Card(
@@ -178,14 +189,8 @@ def build_page():
                                 bootstrap.Tab(
                                     tab_id='graphOutputTab',
                                     children=[
-                                        visdcc.Network(
-                                            id='graphViewer',
-                                            data={'nodes': [], 'edges': []},
-                                            options={
-                                                'width': '100%',
-                                                'height': '100%'
-                                            }
-                                        )],
+                                        html.Iframe(srcDoc=open('assets/graph.html', 'r').read(), width='100%', height='600')
+                                        ],
                                     label="Graph Viewer",
                                 ),
                                 bootstrap.Tab(
