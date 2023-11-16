@@ -14,7 +14,6 @@
         <svg width="500" height="500"></svg>
 
         <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src="https://d3js.org/d3-selection-multi.v1.js"></script>
         <script>
             var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -25,14 +24,14 @@
                 link;
 
             svg.append('defs').append('marker')
-                .attrs({'id':'arrowhead',
-                    'viewBox':'-0 -5 10 10',
-                    'refX':13,
-                    'refY':0,
-                    'orient':'auto',
-                    'markerWidth':13,
-                    'markerHeight':13,
-                    'xoverflow':'visible'})
+                .attr('id', 'arrowhead')
+                .attr('viewBox', '-0 -5 10 10')
+                .attr('refX', 13)
+                .attr('refY', 0)
+                .attr('orient', 'auto')
+                .attr('markerWidth', 13)
+                .attr('markerHeight', 13)
+                .attr('xoverflow', 'visible')
                 .append('svg:path')
                 .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
                 .attr('fill', '#999')
@@ -109,12 +108,10 @@
                     .data(links)
                     .enter()
                     .append('path')
-                    .attrs({
-                        'class': 'edgepath',
-                        'fill-opacity': 0,
-                        'stroke-opacity': 0,
-                        'id': function (d, i) {return 'edgepath' + i}
-                    })
+                    .attr('class', 'edgepath')
+                    .attr('fill-opacity', 0)
+                    .attr('stroke-opacity', 0)
+                    .attr('id', function (d, i) {return 'edgepath' + i})
                     .style("pointer-events", "none");
 
                 edgelabels = svg.selectAll(".edgelabel")
@@ -122,12 +119,10 @@
                     .enter()
                     .append('text')
                     .style("pointer-events", "none")
-                    .attrs({
-                        'class': 'edgelabel',
-                        'id': function (d, i) {return 'edgelabel' + i},
-                        'font-size': 10,
-                        'fill': '#aaa'
-                    });
+                    .attr('class', 'edgelabel')
+                    .attr('id', function (d, i) {return 'edgelabel' + i})
+                    .attr('font-size', 10)
+                    .attr('fill', '#aaa');
 
                 edgelabels.append('textPath')
                     .attr('xlink:href', function (d, i) {return '#edgepath' + i})
