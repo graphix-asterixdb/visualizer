@@ -2,6 +2,7 @@ import dash.html as html
 from __global__ import *
 
 import dash_bootstrap_components as bootstrap
+from dash_bootstrap_templates import ThemeSwitchAIO
 import _query as query_page
 import _functions as functions_page
 import _metadata as metadata_page
@@ -44,6 +45,20 @@ app.layout = html.Div(
                             nav=True,
                             in_navbar=True,
                             label="External Links"
+                        ),
+                        bootstrap.NavLink(
+                            bootstrap.Row(
+                                [
+                                    bootstrap.Col("Theme"),
+                                    bootstrap.Col(
+                                        ThemeSwitchAIO(
+                                            aio_id="theme",
+                                            themes=[bootstrap.themes.COSMO, bootstrap.themes.CYBORG],
+                                            switch_props={"persistence": True}
+                                        )
+                                    )
+                                ]
+                            )
                         )
                     ],
                     vertical=True,

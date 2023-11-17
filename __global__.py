@@ -1,11 +1,12 @@
 import dash
+import dash_bootstrap_components as bootstrap
 
 app = dash.Dash(
     __name__,
     title='Graphix Query Console',
     suppress_callback_exceptions=True,
     external_stylesheets=[
-        "https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/sandstone/bootstrap.min.css",
+        bootstrap.themes.COSMO,
         "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css",
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css'
     ]
