@@ -6,7 +6,7 @@ app = dash.Dash(
     title='Graphix Query Console',
     suppress_callback_exceptions=True,
     external_stylesheets=[
-        bootstrap.themes.COSMO,
+        bootstrap.themes.SPACELAB,
         "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css",
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css'
     ]

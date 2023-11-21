@@ -53,7 +53,7 @@ app.layout = html.Div(
                                     bootstrap.Col(
                                         ThemeSwitchAIO(
                                             aio_id="theme",
-                                            themes=[bootstrap.themes.COSMO, bootstrap.themes.CYBORG],
+                                            themes=[bootstrap.themes.SPACELAB, bootstrap.themes.CYBORG],
                                             switch_props={"persistence": True}
                                         )
                                     )
