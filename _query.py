@@ -33,7 +33,8 @@ _callback_manager = dash.DiskcacheManager(diskcache.Cache())
     background=True,
     running=[
         (dash.Output('runButton', 'disabled'), True, False),
-        (dash.Output('outputPaneSpinner', 'children'), spinners.Grid(color='#325d88'), None)
+        (dash.Output('outputPaneSpinner', 'children'), spinners.Grid(color='#325d88'), None),
+        (dash.Output('net', 'style'), {'display': 'none'}, {'display': 'block'})
     ]
 )
 def _execute_query(n_clicks, query_input):
@@ -88,14 +89,16 @@ def _execute_query(n_clicks, query_input):
                 else:
                     idx += 1
                     id_dict[variable] = idx
-                    nodes[node_tuple] = {"id": idx, "data": node}
+                    label = f"{node_variables[variable]} {idx}"
+                    nodes[node_tuple] = {"id": idx, "data": node, "label": label}
         # Go through each edge.
         for variable, edge in entry.items():
             if variable in edge_variables:
                 edge_definition = edge_variables[variable]
+                label = edge_definition["label"]
                 if edge_definition["from"] not in id_dict or edge_definition["to"] not in id_dict:
                     continue
-                edges.append({"source": id_dict[edge_definition["from"]], "target": id_dict[edge_definition["to"]], "data": edge})
+                edges.append({"from": id_dict[edge_definition["from"]], "to": id_dict[edge_definition["to"]], "data": edge, "label": label})
 
     print({'nodes': list(nodes.values()), 'edges': edges})
     return response['results'], {'nodes': list(nodes.values()), 'edges': edges}
@@ -123,15 +126,32 @@ def _update_table(query_results, active_tab):
     table_columns = [{"name": i, "id": i} for i in column_names]
     return table_data, table_columns
 
-
-def _update_graph(query_result,active_tab):
-    if active_tab != 'tableOutputTab':
+@app.callback(
+    dash.Output('net', 'data'),
+    dash.Input('graphData', 'data'),
+    dash.Input('outputTabs', 'active_tab')
+)
+def _update_graph(graph_data, active_tab):
+    if active_tab != 'graphOutputTab':
         raise dash.exceptions.PreventUpdate
-    return f'''
-        <script>
-                myExternalFunction("Data for Tab 2");
-            </script>
-    '''
+    
+    return graph_data
+
+@app.callback(
+    dash.Output('net', 'data', allow_duplicate=True),
+    dash.Input('testGraph', 'n_clicks'),
+    prevent_initial_call=True
+)
+def _update_graph_test(n_clicks):
+    return {
+        'nodes': [
+            {'id': 1, 'label': 'Node 1', 'title': '{id: 1, label: Node 1}'},
+            {'id': 2, 'label': 'Node 2'},
+        ],
+        'edges': [
+            {'from': 1, 'to': 2, 'label': '1 to 2', 'title': 'title'},
+        ],
+    }
 
 def build_page():
     def _build_input_pane():
@@ -144,7 +164,7 @@ def build_page():
                             id='queryInput',
                             mode=None,
                             theme='textmate',
-                            placeholder=None,
+                            value='FROM GRAPH Gelp.GelpGraph\n\t(r:Review)-[a:ABOUT]->(b:Business)\nSELECT r, a, b;',
                             showGutter=True,
                             showPrintMargin=False,
                             maxLines=math.inf,
@@ -164,6 +184,16 @@ def build_page():
                                     children=[
                                         html.Span(className="bi bi-play", style={'font-size': '16px'}),
                                         " Run "
+                                    ],
+                                    type='button',
+                                    n_clicks=0
+                                ),
+                                html.Button(
+                                    id='testGraph',
+                                    className='btn btn-primary position-absolute bottom-0 end-50 queryButton',
+                                    children=[
+                                        html.Span(className="bi bi-play", style={'font-size': '16px'}),
+                                        " Test "
                                     ],
                                     type='button',
                                     n_clicks=0
@@ -189,8 +219,50 @@ def build_page():
                                 bootstrap.Tab(
                                     tab_id='graphOutputTab',
                                     children=[
-                                        html.Iframe(srcDoc=open('assets/graph.html', 'r').read(), width='100%', height='600')
-                                        ],
+                                        visdcc.Network(
+                                            id = 'net',
+                                            data = {
+                                                'nodes': [
+                                                    {'id': 1, 'color': 'white'},
+                                                    {'id': 2, 'color': 'white'},
+                                                ],
+                                                'edges': [
+                                                    {'from': 1, 'to': 2},
+                                                ],
+                                            },
+                                            options = {
+                                                'autoResize': True,
+                                                'height': '600px',
+                                                'width': '100%',
+                                                'edges': {
+                                                    'arrows': {
+                                                        'to': {
+                                                            'enabled': True,
+                                                            'scaleFactor': 1,
+                                                            'type': "arrow",
+                                                        }
+                                                    },
+                                                    'smooth': False,
+                                                    'font': {
+                                                        'align': 'middle',
+                                                    },
+                                                },
+                                                'nodes': {
+                                                    'shape': 'circle',
+                                                    'color': {
+                                                        'background': '#97C2FC',
+                                                        'hover': {
+                                                            'background': '#2B7CE9',
+                                                        }
+                                                    },
+                                                },
+                                                'interaction': {
+                                                    'hover': True,
+                                                }
+                                            }
+                                        ),
+                                        # html.Iframe(srcDoc=open('assets/graph.html', 'r').read(), width='100%', height='600')
+                                    ],
                                     label="Graph Viewer",
                                 ),
                                 bootstrap.Tab(
