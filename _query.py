@@ -90,7 +90,13 @@ def _execute_query(n_clicks, query_input):
                     idx += 1
                     id_dict[variable] = idx
                     label = f"{node_variables[variable]} {idx}"
-                    nodes[node_tuple] = {"id": idx, "data": node, "label": label}
+                    title_json = json.dumps(node, indent=2)
+                    nodes[node_tuple] = {
+                        "id": idx,
+                        "data": node,
+                        "label": label,
+                        "title": f"<pre><code>{title_json}</code></pre>"
+                    }
         # Go through each edge.
         for variable, edge in entry.items():
             if variable in edge_variables:
@@ -98,7 +104,14 @@ def _execute_query(n_clicks, query_input):
                 label = edge_definition["label"]
                 if edge_definition["from"] not in id_dict or edge_definition["to"] not in id_dict:
                     continue
-                edges.append({"from": id_dict[edge_definition["from"]], "to": id_dict[edge_definition["to"]], "data": edge, "label": label})
+                title_json = json.dumps(edge, indent=2)
+                edges.append({
+                    "from": id_dict[edge_definition["from"]],
+                    "to": id_dict[edge_definition["to"]],
+                    "data": edge,
+                    "label": label,
+                    "title": f"<pre><code>{title_json}</code></pre>"
+                })
 
     print({'nodes': list(nodes.values()), 'edges': edges})
     return response['results'], {'nodes': list(nodes.values()), 'edges': edges}
@@ -145,7 +158,7 @@ def _update_graph(graph_data, active_tab):
 def _update_graph_test(n_clicks):
     return {
         'nodes': [
-            {'id': 1, 'label': 'Node 1', 'title': '{id: 1, label: Node 1}'},
+            {'id': 1, 'label': 'Node 1', 'title': 'test title'},
             {'id': 2, 'label': 'Node 2'},
         ],
         'edges': [
@@ -258,6 +271,8 @@ def build_page():
                                                 },
                                                 'interaction': {
                                                     'hover': True,
+                                                    'hoverConnectedEdges': False,
+                                                    'tooltipDelay': 50
                                                 }
                                             }
                                         ),

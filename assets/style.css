@@ -30,3 +30,11 @@
     color: black;
     border: 2px outset antiquewhite;
 }
+
+.vis-tooltip {
+    position: absolute;
+    background-color: #f5f4ed;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #808074;
+}
