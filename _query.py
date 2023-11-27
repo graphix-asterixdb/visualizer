@@ -14,6 +14,7 @@ import re
 import math
 import diskcache
 
+from dash_bootstrap_templates import ThemeSwitchAIO
 import dash_bootstrap_components as bootstrap
 import dash_loading_spinners as spinners
 import __utilities__ as utilities
@@ -149,6 +150,13 @@ def _update_graph(graph_data, active_tab):
         raise dash.exceptions.PreventUpdate
     
     return graph_data
+
+@app.callback(
+    dash.Output('queryInput', 'theme'),
+    dash.Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
+)
+def _update_input_theme(is_light):
+    return 'textmate' if is_light else 'twilight'
 
 @app.callback(
     dash.Output('net', 'data', allow_duplicate=True),
