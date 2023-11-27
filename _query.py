@@ -153,10 +153,34 @@ def _update_graph(graph_data, active_tab):
 
 @app.callback(
     dash.Output('queryInput', 'theme'),
+    dash.Output('tableViewer', 'style_header'),
+    dash.Output('tableViewer', 'style_data'),
     dash.Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
 )
-def _update_input_theme(is_light):
-    return 'textmate' if is_light else 'twilight'
+def _update_theme(is_light):
+    if is_light:
+        query_input_theme = 'textmate'
+        style_header = {
+            'backgroundColor': 'rgb(210, 210, 210)',
+            'color': 'black',
+            'fontWeight': 'bold'
+        }
+        style_data = {
+            'color': 'black',
+            'backgroundColor': 'white'
+        }
+    else:
+        query_input_theme = 'twilight'
+        style_header = {
+            'backgroundColor': 'rgb(30, 30, 30)',
+            'color': 'white',
+            'fontWeight': 'bold'
+        }
+        style_data = {
+            'backgroundColor': 'rgb(50, 50, 50)',
+            'color': 'white'
+        }
+    return query_input_theme, style_header, style_data
 
 @app.callback(
     dash.Output('net', 'data', allow_duplicate=True),
