@@ -1,5 +1,6 @@
 import json
 import dash
+import visdcc
 import pathlib
 import requests
 from dash import html, dcc
@@ -125,6 +126,18 @@ def _graph_detail(n_clicks, data):
     for i in range(len(n_clicks)):
         if n_clicks[i]:
             detail = data[i]
+            nodes = [{
+                "id": node["Label"],
+                "label": node["Label"],
+                "title": f"<pre><code>{node['Body']}</code></pre>"
+            } for node in detail["Vertices"]]
+            edges = [{
+                "from": edge["SourceLabel"],
+                "to": edge["DestinationLabel"],
+                "label": edge["Label"],
+                "title": f"<pre><code>{edge['Body']}</code></pre>"
+            } for edge in detail["Edges"]]
+
             jumbotron = bootstrap.Container(
                 [
                     html.H1("Graph: " + detail["GraphName"], className="display-5"),
@@ -133,6 +146,42 @@ def _graph_detail(n_clicks, data):
                     html.Br(),
                     html.P("Dataverse: " + detail["DataverseName"]),
                     html.P("Graph: " + detail["GraphName"]),
+                    visdcc.Network(
+                        id='graph_definition',
+                        data={'nodes': nodes, 'edges': edges},
+                        options={
+                            'autoResize': True,
+                            'height': '400px',
+                            'width': '100%',
+                            'edges': {
+                                'arrows': {
+                                    'to': {
+                                        'enabled': True,
+                                        'scaleFactor': 1,
+                                        'type': "arrow",
+                                    }
+                                },
+                                'smooth': False,
+                                'font': {
+                                    'align': 'middle',
+                                },
+                            },
+                            'nodes': {
+                                'shape': 'circle',
+                                'color': {
+                                    'background': '#97C2FC',
+                                    'hover': {
+                                        'background': '#2B7CE9',
+                                    }
+                                },
+                            },
+                            'interaction': {
+                                'hover': True,
+                                'hoverConnectedEdges': False,
+                                'tooltipDelay': 50
+                            }
+                        }
+                    ),
                     html.P("Vertices:"),
                     bootstrap.Container(
                         html.Pre(html.Code(json.dumps(detail["Vertices"], indent=2))),
