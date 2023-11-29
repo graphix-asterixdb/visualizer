@@ -13,6 +13,43 @@ app.layout = html.Div(
         dash.dcc.Location(id="url"),
         dash.dcc.Store(id='queryResults', data={}),
         dash.dcc.Store(id='graphData', data={'nodes': [], 'edges': []}),
+        dash.dcc.Store(id='graphSettings', storage_type='local', data={
+            'autoResize': True,
+            'height': '600px',
+            'width': '100%',
+            'edges': {
+                'arrows': {
+                    'to': {
+                        'enabled': True,
+                        'scaleFactor': 1,
+                        'type': "arrow",
+                    }
+                },
+                'smooth': False,
+                'font': {
+                    'align': 'middle',
+                },
+            },
+            'nodes': {
+                'shape': 'circle',
+                'color': {
+                    'background': '#97C2FC',
+                    'hover': {
+                        'background': '#2B7CE9',
+                    }
+                },
+            },
+            'interaction': {
+                'hover': True,
+                'hoverConnectedEdges': False,
+                'tooltipDelay': 50
+            },
+            "physics": {
+                "barnesHut": {
+                    "avoidOverlap": 0.2
+                }
+            }
+        }),
         bootstrap.Col(
             className='mainSidebar bg-light',
             children=[

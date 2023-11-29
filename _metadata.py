@@ -150,36 +150,8 @@ def _graph_detail(n_clicks, data):
                         id='graph_definition',
                         data={'nodes': nodes, 'edges': edges},
                         options={
-                            'autoResize': True,
                             'height': '400px',
                             'width': '100%',
-                            'edges': {
-                                'arrows': {
-                                    'to': {
-                                        'enabled': True,
-                                        'scaleFactor': 1,
-                                        'type': "arrow",
-                                    }
-                                },
-                                'smooth': False,
-                                'font': {
-                                    'align': 'middle',
-                                },
-                            },
-                            'nodes': {
-                                'shape': 'circle',
-                                'color': {
-                                    'background': '#97C2FC',
-                                    'hover': {
-                                        'background': '#2B7CE9',
-                                    }
-                                },
-                            },
-                            'interaction': {
-                                'hover': True,
-                                'hoverConnectedEdges': False,
-                                'tooltipDelay': 50
-                            }
                         }
                     ),
                     html.P("Vertices:"),
@@ -199,6 +171,14 @@ def _graph_detail(n_clicks, data):
             )
             return jumbotron, [None for item in n_clicks]
     return None, [None for item in n_clicks]
+
+@app.callback(
+    dash.Output('graph_definition', 'options'),
+    dash.Input('graphSettings', 'data'),
+)
+def _load_graph_settings(settings):
+    settings['height'] = '400px'
+    return settings
 
 
 def build_page():

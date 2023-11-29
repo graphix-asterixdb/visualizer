@@ -25,6 +25,14 @@ _callback_manager = dash.DiskcacheManager(diskcache.Cache())
 
 
 @app.callback(
+    dash.Output('net', 'options'),
+    dash.Input('graphSettings', 'data'),
+)
+def _load_graph_settings(settings):
+    print(settings)
+    return settings
+
+@app.callback(
     dash.Output('queryResults', 'data'),
     dash.Output('graphData', 'data'),
     dash.Input('runButton', 'n_clicks'),
@@ -114,7 +122,6 @@ def _execute_query(n_clicks, query_input):
                     "title": f"<pre><code>{title_json}</code></pre>"
                 })
 
-    print({'nodes': list(nodes.values()), 'edges': edges})
     return response['results'], {'nodes': list(nodes.values()), 'edges': edges}
 
 def dict_to_tuple(d):
@@ -265,55 +272,21 @@ def build_page():
                                     tab_id='graphOutputTab',
                                     children=[
                                         visdcc.Network(
-                                            id = 'net',
-                                            data = {
+                                            id='net',
+                                            data={
                                                 'nodes': [
-                                                    {'id': 1, 'color': 'white'},
-                                                    {'id': 2, 'color': 'white'},
+                                                    {'id': 1},
+                                                    {'id': 2},
                                                 ],
                                                 'edges': [
                                                     {'from': 1, 'to': 2},
                                                 ],
                                             },
-                                            options = {
-                                                'autoResize': True,
+                                            options={
                                                 'height': '600px',
                                                 'width': '100%',
-                                                'edges': {
-                                                    'arrows': {
-                                                        'to': {
-                                                            'enabled': True,
-                                                            'scaleFactor': 1,
-                                                            'type': "arrow",
-                                                        }
-                                                    },
-                                                    'smooth': False,
-                                                    'font': {
-                                                        'align': 'middle',
-                                                    },
-                                                },
-                                                'nodes': {
-                                                    'shape': 'circle',
-                                                    'color': {
-                                                        'background': '#97C2FC',
-                                                        'hover': {
-                                                            'background': '#2B7CE9',
-                                                        }
-                                                    },
-                                                },
-                                                'interaction': {
-                                                    'hover': True,
-                                                    'hoverConnectedEdges': False,
-                                                    'tooltipDelay': 50
-                                                },
-                                                "physics": {
-                                                    "barnesHut": {
-                                                        "avoidOverlap": 0.2
-                                                    }
-                                                }
                                             }
                                         ),
-                                        # html.Iframe(srcDoc=open('assets/graph.html', 'r').read(), width='100%', height='600')
                                     ],
                                     label="Graph Viewer",
                                 ),
@@ -322,10 +295,6 @@ def build_page():
                                     children=[
                                         dash.dash_table.DataTable(
                                             id='tableViewer',
-                                            # style_table={
-                                            #     'width': '100%',
-                                            #     'height': '100%'
-                                            # }
                                         )
                                     ],
                                     label="Table Viewer",
