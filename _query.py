@@ -305,6 +305,11 @@ def build_page():
                                                     'hover': True,
                                                     'hoverConnectedEdges': False,
                                                     'tooltipDelay': 50
+                                                },
+                                                "physics": {
+                                                    "barnesHut": {
+                                                        "avoidOverlap": 0.2
+                                                    }
                                                 }
                                             }
                                         ),
