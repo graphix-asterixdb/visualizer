@@ -37,3 +37,8 @@
     border-radius: 5px;
     border: 1px solid #808074;
 }
+
+#color-picker .chrome-picker {
+    border-radius: 0% !important;
+    'display': 'none'
+}

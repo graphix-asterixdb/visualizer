@@ -20,6 +20,7 @@ import dash_loading_spinners as spinners
 import __utilities__ as utilities
 from __global__ import *
 from __errors__ import *
+from _metadata import get_metadata
 
 _callback_manager = dash.DiskcacheManager(diskcache.Cache())
 
@@ -30,6 +31,23 @@ _callback_manager = dash.DiskcacheManager(diskcache.Cache())
 )
 def _load_graph_settings(settings):
     print(settings)
+    return settings
+
+@app.callback(
+    dash.Output('graphSettings', 'data'),
+    dash.Input('url', 'pathname'),
+    dash.State('graphSettings', 'data'),
+)
+def _load_node_labels(pathname, settings):
+    if pathname != QUERY_DIRECTORY:
+        raise dash.exceptions.PreventUpdate
+
+    color_map = settings['groups']
+    graphs = get_metadata('Metadata', 'Graph')
+    for graph in graphs:
+        for node in graph['Vertices']:
+            if node['Label'] not in color_map:
+                color_map[node['Label']] = {'color': {'background': '#97C2FC'}}
     return settings
 
 @app.callback(
@@ -104,6 +122,7 @@ def _execute_query(n_clicks, query_input):
                         "id": idx,
                         "data": node,
                         "label": label,
+                        "group": node_variables[variable],
                         "title": f"<pre><code>{title_json}</code></pre>"
                     }
         # Go through each edge.

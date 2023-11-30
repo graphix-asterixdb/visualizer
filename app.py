@@ -13,6 +13,7 @@ app.layout = html.Div(
         dash.dcc.Location(id="url"),
         dash.dcc.Store(id='queryResults', data={}),
         dash.dcc.Store(id='graphData', data={'nodes': [], 'edges': []}),
+        dash.dcc.Store(id='group-choice', data=None),
         dash.dcc.Store(id='graphSettings', storage_type='local', data={
             'autoResize': True,
             'height': '600px',
@@ -44,6 +45,7 @@ app.layout = html.Div(
                 'hoverConnectedEdges': False,
                 'tooltipDelay': 50
             },
+            'groups': {},
             "physics": {
                 "barnesHut": {
                     "avoidOverlap": 0.2
