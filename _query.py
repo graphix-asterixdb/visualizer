@@ -42,6 +42,8 @@ def _load_node_labels(pathname, settings):
     if pathname != QUERY_DIRECTORY:
         raise dash.exceptions.PreventUpdate
 
+    if 'groups' not in settings:
+        settings['groups'] = {}
     color_map = settings['groups']
     graphs = get_metadata('Metadata', 'Graph')
     for graph in graphs:
