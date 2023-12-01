@@ -71,6 +71,7 @@ def _change_color(color, group, settings):
 def build_page():
     return bootstrap.Container(
         [
+            html.H4('Customize Nodes Color', style={'margin-top': 10, 'margin-bottom': 10}),
             bootstrap.Row(
                 [
                     bootstrap.Col(bootstrap.Container(id='color-map')),
