@@ -80,6 +80,7 @@ def build_page():
                             id='color-picker',
                             label='Color Picker',
                             value={'hex': '#119DFF'},
+                            style={'display': 'none'},
                         )
                     )
                 ]
