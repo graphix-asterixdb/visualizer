@@ -49,7 +49,7 @@ def _load_node_labels(pathname, settings):
     for graph in graphs:
         for node in graph['Vertices']:
             if node['Label'] not in color_map:
-                color_map[node['Label']] = {'color': {'background': '#97C2FC'}}
+                color_map[node['Label']] = {'color': {'background': '#97C2FC'}, 'borderWidth': 0}
     return settings
 
 @app.callback(
