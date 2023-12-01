@@ -210,21 +210,6 @@ def _update_theme(is_light):
         }
     return query_input_theme, style_header, style_data
 
-@app.callback(
-    dash.Output('net', 'data', allow_duplicate=True),
-    dash.Input('testGraph', 'n_clicks'),
-    prevent_initial_call=True
-)
-def _update_graph_test(n_clicks):
-    return {
-        'nodes': [
-            {'id': 1, 'label': 'Node 1', 'title': 'test title'},
-            {'id': 2, 'label': 'Node 2'},
-        ],
-        'edges': [
-            {'from': 1, 'to': 2, 'label': '1 to 2', 'title': 'title'},
-        ],
-    }
 
 def build_page():
     def _build_input_pane():
@@ -261,16 +246,6 @@ def build_page():
                                     type='button',
                                     n_clicks=0
                                 ),
-                                html.Button(
-                                    id='testGraph',
-                                    className='btn btn-primary position-absolute bottom-0 end-50 queryButton',
-                                    children=[
-                                        html.Span(className="bi bi-play", style={'font-size': '16px'}),
-                                        " Test "
-                                    ],
-                                    type='button',
-                                    n_clicks=0
-                                )
                             ]
                         )
                     ]
