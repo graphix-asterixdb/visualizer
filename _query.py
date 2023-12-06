@@ -118,7 +118,7 @@ def _execute_query(n_clicks, query_input):
                 else:
                     idx += 1
                     id_dict[variable] = idx
-                    label = f"{node_variables[variable]} {idx}"
+                    label = node['name'] if 'name' in node else f"{node_variables[variable]} {idx}"
                     title_json = json.dumps(node, indent=2)
                     nodes[node_tuple] = {
                         "id": idx,
@@ -170,6 +170,7 @@ def _update_table(query_results, active_tab):
 
 @app.callback(
     dash.Output('net', 'data'),
+    dash.Output('outputTabs', 'active_tab'),
     dash.Input('graphData', 'data'),
     dash.Input('outputTabs', 'active_tab')
 )
@@ -177,7 +178,11 @@ def _update_graph(graph_data, active_tab):
     if active_tab != 'graphOutputTab':
         raise dash.exceptions.PreventUpdate
     
-    return graph_data
+    if not graph_data['nodes']:
+        print('Cannot show data as graph, switch to Table Viewer tab...')
+        return graph_data, 'tableOutputTab'
+    
+    return graph_data, 'graphOutputTab'
 
 @app.callback(
     dash.Output('queryInput', 'theme'),
