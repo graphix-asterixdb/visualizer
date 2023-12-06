@@ -14,6 +14,7 @@ app.layout = html.Div(
         dash.dcc.Store(id='queryResults', data={}),
         dash.dcc.Store(id='graphData', data={'nodes': [], 'edges': []}),
         dash.dcc.Store(id='group-choice', data=None),
+        dash.dcc.Store(id='node-limit', storage_type='local', data=100),
         dash.dcc.Store(id='graphSettings', storage_type='local', data={
             'autoResize': True,
             'height': '600px',

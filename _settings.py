@@ -67,6 +67,23 @@ def _change_color(color, group, settings):
     settings['groups'][group]['color']['background'] = color['hex']
     return settings
 
+@app.callback(
+    dash.Output('node-limit-input', 'value'),
+    dash.Input('url', 'pathname'),
+    dash.State('node-limit', 'data'),
+)
+def _init_settings(pathname, node_limit):
+    if pathname != SETTINGS_DIRECTORY:
+        raise dash.exceptions.PreventUpdate
+    return node_limit
+
+@app.callback(
+    dash.Output('node-limit', 'data'),
+    dash.Input('node-limit-input', 'value'),
+)
+def _init_settings(node_limit):
+    return node_limit
+
 
 def build_page():
     return bootstrap.Container(
@@ -84,6 +101,19 @@ def build_page():
                         )
                     )
                 ]
-            )
+            ),
+            bootstrap.Row(
+                [
+                    bootstrap.Col(
+                        html.H4('Node Count Limit'),
+                        width=4
+                    ),
+                    bootstrap.Col(
+                        bootstrap.Input(id="node-limit-input", type="number", min=1, max=1000, step=1),
+                        width=2
+                    )
+                ],
+                style={'margin-top': 30, 'margin-bottom': 10}
+            ),
         ]
     )

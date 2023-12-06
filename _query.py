@@ -57,6 +57,7 @@ def _load_node_labels(pathname, settings):
     dash.Output('graphData', 'data'),
     dash.Input('runButton', 'n_clicks'),
     dash.State('queryInput', 'value'),
+    dash.State('node-limit', 'data'),
     prevent_initial_call=True,
     manager=_callback_manager,
     background=True,
@@ -66,7 +67,7 @@ def _load_node_labels(pathname, settings):
         (dash.Output('net', 'style'), {'display': 'none'}, {'display': 'block'})
     ]
 )
-def _execute_query(n_clicks, query_input):
+def _execute_query(n_clicks, query_input, node_limit):
     settings_file = pathlib.Path(__file__).parent / 'settings/graphix.json'
     if not settings_file.exists():
         raise FileNotFoundError(settings_file.name)
@@ -111,6 +112,8 @@ def _execute_query(n_clicks, query_input):
         # Go through each node, cache each node's id.
         id_dict = {}
         for variable, node in entry.items():
+            if idx >= node_limit:
+                break
             if variable in node_variables:
                 node_tuple = dict_to_tuple(node)
                 if node_tuple in nodes:
