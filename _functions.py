@@ -12,11 +12,12 @@ def build_page():
         body.append(html.Br())
         body.append(html.Br())
         body.append(html.A(html.H2(function_class), id=function_class))
+        body.append(html.Br())
 
         for function in function_list:
             jumbotron = bootstrap.Container(
                 [
-                    html.H1(function["functionName"], className="display-5"),
+                    html.H1(function["functionName"], className="display-6"),
                     html.P(function["functionDescription"], className="lead"),
                     html.Hr(className="my-2"),
                     html.P(function["functionText"], className="small", style={"white-space": "pre-wrap"}),

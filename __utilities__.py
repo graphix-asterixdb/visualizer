@@ -45,6 +45,32 @@ def scrape_functions() -> typing.Dict:
         except Exception:
             pass
 
+    # also scrape from Graphix
+    _URL = 'https://graphix.ics.uci.edu/docs/language-reference/functions.html'
+    page = requests.get(_URL)
+    soup = bs4.BeautifulSoup(page.content, 'html.parser')
+
+    for func_element in soup.findAll('h3'):
+        try:
+            function_name = func_element.text.strip()
+            function_next = func_element.findNextSibling()
+            function_class = 'Graphix_Functions'
+            function_description = function_next.text
+            function_text = ''
+            for idx, item in enumerate(function_next.findNextSibling().findAll(recursive=False)):
+                function_text += f'{item.text.strip()}{":" if idx % 2 == 0 else ""}\n\n'
+
+            functions_dict[function_name] = {
+                'functionName': function_name,
+                'functionClass': function_class,
+                'functionText': function_text,
+                'functionDescription': function_description
+            }
+            function_class_dict[function_class] = []
+
+        except Exception:
+            pass
+
     for function_obj in functions_dict.values():
         function_class_dict[function_obj['functionClass']].append(function_obj)
 
