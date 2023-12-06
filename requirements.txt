@@ -9,3 +9,5 @@ beautifulsoup4~=4.12.2
 dash-loading-spinners
 dash-bootstrap-components
 dash-ace
+dash-bootstrap-templates
+dash-daq
