@@ -49,7 +49,10 @@ def _load_node_labels(pathname, settings):
     for graph in graphs:
         for node in graph['Vertices']:
             if node['Label'] not in color_map:
-                color_map[node['Label']] = {'color': {'background': '#97C2FC'}, 'borderWidth': 0}
+                color_map[node['Label']] = {
+                    'borderWidth': 0,
+                    'color': {'background': '#97C2FC'},
+                }
     return settings
 
 @app.callback(
@@ -121,12 +124,12 @@ def _execute_query(n_clicks, query_input, node_limit):
                 else:
                     idx += 1
                     id_dict[variable] = idx
-                    label = node['name'] if 'name' in node else f"{node_variables[variable]} {idx}"
+                    label = node['name'] if 'name' in node else f"{node_variables[variable]}-{idx}"
                     title_json = json.dumps(node, indent=2)
                     nodes[node_tuple] = {
                         "id": idx,
                         "data": node,
-                        "label": label,
+                        "label": "\n".join(label.split()),
                         "group": node_variables[variable],
                         "title": f"<pre><code>{title_json}</code></pre>"
                     }

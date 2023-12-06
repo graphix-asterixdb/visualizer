@@ -47,6 +47,11 @@ app.layout = html.Div(
                 'tooltipDelay': 50
             },
             'groups': {},
+            "physics": {
+                "barnesHut": {
+                    "avoidOverlap": 0.1
+                }
+            }
         }),
         bootstrap.Col(
             className='mainSidebar bg-light',
