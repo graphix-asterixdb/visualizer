@@ -194,13 +194,14 @@ def _update_graph(graph_data, active_tab):
     dash.Output('queryInput', 'theme'),
     dash.Output('tableViewer', 'style_header'),
     dash.Output('tableViewer', 'style_data'),
+    dash.Output('tableViewer', 'style_data_conditional'),
     dash.Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
 )
 def _update_theme(is_light):
     if is_light:
         query_input_theme = 'textmate'
         style_header = {
-            'backgroundColor': 'rgb(210, 210, 210)',
+            'backgroundColor': 'rgb(220, 220, 220)',
             'color': 'black',
             'fontWeight': 'bold'
         }
@@ -208,6 +209,12 @@ def _update_theme(is_light):
             'color': 'black',
             'backgroundColor': 'white'
         }
+        style_data_conditional = [
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': 'rgb(240, 240, 240)',
+            }
+        ]
     else:
         query_input_theme = 'twilight'
         style_header = {
@@ -216,10 +223,16 @@ def _update_theme(is_light):
             'fontWeight': 'bold'
         }
         style_data = {
-            'backgroundColor': 'rgb(50, 50, 50)',
+            'backgroundColor': 'rgb(70, 70, 70)',
             'color': 'white'
         }
-    return query_input_theme, style_header, style_data
+        style_data_conditional = [
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': 'rgb(50, 50, 50)',
+            }
+        ]
+    return query_input_theme, style_header, style_data, style_data_conditional
 
 
 def build_page():

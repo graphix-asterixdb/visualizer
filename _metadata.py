@@ -129,6 +129,7 @@ def _graph_detail(n_clicks, data):
             nodes = [{
                 "id": node["Label"],
                 "label": node["Label"],
+                "group": node["Label"],
                 "title": f"<pre><code>{node['Body']}</code></pre>"
             } for node in detail["Vertices"]]
             edges = [{
