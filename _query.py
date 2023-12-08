@@ -30,7 +30,6 @@ _callback_manager = dash.DiskcacheManager(diskcache.Cache())
     dash.Input('graphSettings', 'data'),
 )
 def _load_graph_settings(settings):
-    print(settings)
     return settings
 
 @app.callback(
@@ -118,7 +117,7 @@ def _execute_query(n_clicks, query_input, node_limit):
             if idx >= node_limit:
                 break
             if variable in node_variables:
-                node_tuple = dict_to_tuple(node)
+                node_tuple = json.dumps(node)
                 if node_tuple in nodes:
                     id_dict[variable] = nodes[node_tuple]["id"]
                 else:
@@ -151,12 +150,8 @@ def _execute_query(n_clicks, query_input, node_limit):
 
     return response['results'], {'nodes': list(nodes.values()), 'edges': edges}
 
-def dict_to_tuple(d):
-    res = []
-    for key, value in d.items():
-        res.append(key)
-        res.append(value)
-    return tuple(res)
+def get_name(obj):
+    return obj['name']
 
 @app.callback(
     dash.Output('tableViewer', 'data'),
@@ -172,6 +167,16 @@ def _update_table(query_results, active_tab):
     table_data = [flatten_json.flatten(x) for x in query_results]
     column_names = set(k for kk in [x.keys() for x in table_data] for k in kk)
     table_columns = [{"name": i, "id": i} for i in column_names]
+    table_columns.sort(key=get_name)
+    
+    for table_row in table_data:
+        del_list = []
+        for key, value in table_row.items():
+            if type(value) is list:
+                del_list.append(key)
+        for key in del_list:
+            del table_row[key]
+
     return table_data, table_columns
 
 @app.callback(
