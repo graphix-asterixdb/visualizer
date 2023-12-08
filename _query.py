@@ -66,7 +66,8 @@ def _load_node_labels(pathname, settings):
     running=[
         (dash.Output('runButton', 'disabled'), True, False),
         (dash.Output('outputPaneSpinner', 'children'), spinners.Grid(color='#325d88'), None),
-        (dash.Output('net', 'style'), {'display': 'none'}, {'display': 'block'})
+        (dash.Output('net', 'style'), {'display': 'none'}, {'display': 'block'}),
+        (dash.Output('tableDiv', 'style'), {'display': 'none'}, {'display': 'block'}),
     ]
 )
 def _execute_query(n_clicks, query_input, node_limit):
@@ -134,6 +135,8 @@ def _execute_query(n_clicks, query_input, node_limit):
                     }
         # Go through each edge.
         for variable, edge in entry.items():
+            if variable[0] == '$':
+                variable = '#' + variable[1:]
             if variable in edge_variables:
                 edge_definition = edge_variables[variable]
                 label = edge_definition["label"]
@@ -318,8 +321,11 @@ def build_page():
                                 bootstrap.Tab(
                                     tab_id='tableOutputTab',
                                     children=[
-                                        dash.dash_table.DataTable(
-                                            id='tableViewer',
+                                        html.Div(
+                                            dash.dash_table.DataTable(
+                                                id='tableViewer',
+                                            ),
+                                            id='tableDiv'
                                         )
                                     ],
                                     label="Table Viewer",
