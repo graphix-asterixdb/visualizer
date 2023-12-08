@@ -116,9 +116,6 @@ def _execute_query(n_clicks, query_input, node_limit):
             for edge in response["graphix"]["patterns"]["paths"]
         }
 
-    print(response['results'])
-    print(response["graphix"]["patterns"])
-
     # Turn query result into nodes and edges.
     idx = 0
     nodes = {}
