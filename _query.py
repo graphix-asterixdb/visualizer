@@ -106,6 +106,18 @@ def _execute_query(n_clicks, query_input, node_limit):
         } 
         for edge in response["graphix"]["patterns"]["edges"]
     }
+    if not edge_variables:
+        edge_variables = {
+            edge["graphElement"]["variable"]: {
+                "label": edge["graphElement"]["labels"][0], 
+                "from": edge["edgeElement"]["leftVertex"]["variable"], 
+                "to": edge["edgeElement"]["rightVertex"]["variable"]
+            } 
+            for edge in response["graphix"]["patterns"]["paths"]
+        }
+
+    print(response['results'])
+    print(response["graphix"]["patterns"])
 
     # Turn query result into nodes and edges.
     idx = 0
@@ -117,6 +129,8 @@ def _execute_query(n_clicks, query_input, node_limit):
         for variable, node in entry.items():
             if idx >= node_limit:
                 break
+            if variable[0] == '$':
+                variable = '#' + variable[1:]
             if variable in node_variables:
                 node_tuple = json.dumps(node)
                 if node_tuple in nodes:

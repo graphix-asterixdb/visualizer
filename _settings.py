@@ -109,7 +109,7 @@ def build_page():
                         width=4
                     ),
                     bootstrap.Col(
-                        bootstrap.Input(id="node-limit-input", type="number", min=1, max=1000, step=1),
+                        bootstrap.Input(id="node-limit-input", type="number", min=1, max=10000, step=1),
                         width=2
                     )
                 ],
